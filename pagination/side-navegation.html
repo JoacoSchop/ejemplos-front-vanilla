@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="./side.css">
+</head>
+
+<body>
+  <button class="nav-btn nav-left" onclick="scrollPrev()">⟨</button>
+  <button class="nav-btn nav-right" onclick="scrollNext()">⟩</button>
+
+
+  <main class="container" id="slider">
+    <section class="pantalla pantalla1">1</section>
+    <section class="pantalla pantalla2">2</section>
+    <section class="pantalla pantalla3">3</section>
+    <section class="pantalla pantalla4">4</section>
+  </main>
+
+  <script>
+    const container = document.getElementById("slider");
+    const total = container.children.length;
+    let currentIndex = 0;
+
+    function scrollToIndex(index) {
+      const x = index * window.innerWidth;
+      container.scrollTo({ left: x, behavior: "smooth" });
+    }
+
+    function scrollNext() {
+      currentIndex = (currentIndex + 1) % total;                 // 3->0
+      scrollToIndex(currentIndex);
+    }
+
+    function scrollPrev() {
+      currentIndex = (currentIndex - 1 + total) % total;          // 0->3
+      scrollToIndex(currentIndex);
+    }
+
+    // Si el usuario arrastra con el mouse/touch, actualizamos el índice
+    container.addEventListener("scroll", () => {
+      const idx = Math.round(container.scrollLeft / window.innerWidth);
+      currentIndex = Math.max(0, Math.min(total - 1, idx));
+    });
+
+    // Si cambia el tamaño de la ventana, mantenemos el snap correcto
+    window.addEventListener("resize", () => {
+      scrollToIndex(currentIndex);
+    });
+  </script>
+
+</body>
+
+</html>
