@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .container {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+
+      &>*{
+        padding: .5rem 1rem;
+        font-size: 1.2rem;
+        cursor: pointer;
+      }
+    }
+
+    dialog::backdrop {
+      background: rgba(0,0,0,.5);
+    }
+
+    [data-close-modal], [data-close-dialog]{
+      background-color: red;
+      color: white;
+      border: none;
+      padding: .2rem .5rem;
+      font-size: 1.2rem;
+      cursor: pointer;
+      font-weight: bold;
+      border-radius: 25%;
+    }
+  </style>
+</head>
+<body>
+  <dialog data-dialog>
+    <p>Esto es una ventana dialogo</p>
+    <p>La ubicacion estac ondicionada a donde esta en el documento HTML</p>
+    <button data-close-dialog>X</button>
+  </dialog>
+
+  <main class="container">
+    <button data-open-modal >Abrir modal</button>
+    <button data-open-dialog >Abrir dialogo</button>
+  </main>
+
+  <dialog data-modal>
+    <p>Esto es una ventana modal</p>
+    <button data-close-modal>X</button>
+  </dialog>
+
+  <script>
+    const openModalBtn = document.querySelector('[data-open-modal]');
+    const closeModalBtn = document.querySelector('[data-close-modal]');
+    const modal = document.querySelector('[data-modal]');
+
+    openModalBtn.addEventListener('click', () => {
+      modal.showModal();
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+      modal.close();
+    });
+
+    modal.addEventListener('click', (e) => {
+      const dialogDimensions = modal.getBoundingClientRect();
+      if (
+        e.clientX < dialogDimensions.left ||
+        e.clientX > dialogDimensions.right ||
+        e.clientY < dialogDimensions.top ||
+        e.clientY > dialogDimensions.bottom
+      ) {
+        modal.close();
+      }
+    });
+
+    const openDialogBtn = document.querySelector('[data-open-dialog]');
+    const closeDialogBtn = document.querySelector('[data-close-dialog]');
+    const dialog = document.querySelector('[data-dialog]');
+
+    openDialogBtn.addEventListener('click', () => {
+      dialog.show();
+    });
+
+    closeDialogBtn.addEventListener('click', () => {
+      dialog.close();
+    });
+  </script>
+</body>
+</html>
