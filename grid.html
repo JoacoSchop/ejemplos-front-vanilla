@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Grid Playground Interactivo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f4f6f8;
+      color: #333;
+    }
+
+    header {
+      background: #16a34a;
+      color: white;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    section {
+      padding: 2rem;
+      border-bottom: 1px solid #ddd;
+    }
+
+    h2 {
+      margin-bottom: 1rem;
+      color: #16a34a;
+    }
+
+    .grid-container {
+      display: grid;
+      background: white;
+      border: 1px solid #ccc;
+      padding: 1rem;
+      margin-top: 1rem;
+      min-height: 200px;
+      position: relative;
+      transition: all 0.3s ease;
+      gap: .5rem;
+    }
+
+    .label {
+      position: absolute;
+      top: 5px;
+      right: 10px;
+      background: #16a34a;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    .item {
+      background: #22c55e;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      border-radius: 6px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    .controls {
+      margin-top: 10px;
+    }
+
+    button {
+      margin: 2px;
+      padding: 6px 10px;
+      border: none;
+      border-radius: 6px;
+      background: #e5e7eb;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    button:hover {
+      background: #cbd5e1;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CSS Grid Playground Interactivo</h1>
+    <p>Explorá cómo funcionan las propiedades de CSS Grid cambiando sus valores</p>
+  </header>
+
+  <!-- grid-template-columns -->
+  <section>
+    <h2>grid-template-columns</h2>
+    <p>Define el número y tamaño de las columnas.</p>
+    <div class="controls">
+      <button onclick="setGridProp('colBox','gridTemplateColumns','1fr 1fr')">2 columnas</button>
+      <button onclick="setGridProp('colBox','gridTemplateColumns','1fr 1fr 1fr')">3 columnas</button>
+      <button onclick="setGridProp('colBox','gridTemplateColumns','2fr 1fr')">2fr 1fr</button>
+      <button onclick="setGridProp('colBox','gridTemplateColumns','repeat(4, 1fr)')">4 columnas</button>
+    </div>
+    <div id="colBox" class="grid-container" style="grid-template-columns: 1fr 1fr;">
+      <div class="label">grid-template-columns: 1fr 1fr</div>
+      <div class="item">1</div><div class="item">2</div><div class="item">3</div><div class="item">4</div>
+    </div>
+  </section>
+
+  <!-- grid-template-rows -->
+  <section>
+    <h2>grid-template-rows</h2>
+    <p>Define el número y tamaño de las filas.</p>
+    <div class="controls">
+      <button onclick="setGridProp('rowBox','gridTemplateRows','50px 50px')">2 filas de 50px</button>
+      <button onclick="setGridProp('rowBox','gridTemplateRows','100px 200px')">100px 200px</button>
+      <button onclick="setGridProp('rowBox','gridTemplateRows','repeat(3, 1fr)')">3 filas iguales</button>
+    </div>
+    <div id="rowBox" class="grid-container" style="grid-template-columns: 1fr 1fr; grid-template-rows: 50px 50px;">
+      <div class="label">grid-template-rows: 50px 50px</div>
+      <div class="item">1</div><div class="item">2</div><div class="item">3</div><div class="item">4</div>
+    </div>
+  </section>
+
+  <!-- gap -->
+  <section>
+    <h2>gap</h2>
+    <p>Define el espacio entre filas y columnas.</p>
+    <div class="controls">
+      <button onclick="setGridProp('gapBox','gap','0px')">0</button>
+      <button onclick="setGridProp('gapBox','gap','10px')">10px</button>
+      <button onclick="setGridProp('gapBox','gap','20px')">20px</button>
+    </div>
+    <div id="gapBox" class="grid-container" style="grid-template-columns: repeat(3,1fr); gap:0px;">
+      <div class="label">gap: 0px</div>
+      <div class="item">1</div><div class="item">2</div><div class="item">3</div>
+      <div class="item">4</div><div class="item">5</div><div class="item">6</div>
+    </div>
+  </section>
+
+  <!-- justify-items -->
+  <section>
+    <h2>justify-items</h2>
+    <p>Alinea los ítems en el eje horizontal dentro de cada celda.</p>
+    <div class="controls">
+      <button onclick="setGridProp('justifyItemsBox','justifyItems','start')">start</button>
+      <button onclick="setGridProp('justifyItemsBox','justifyItems','center')">center</button>
+      <button onclick="setGridProp('justifyItemsBox','justifyItems','end')">end</button>
+      <button onclick="setGridProp('justifyItemsBox','justifyItems','stretch')">stretch</button>
+    </div>
+    <div id="justifyItemsBox" class="grid-container" style="grid-template-columns: repeat(3,1fr); justify-items:start;">
+      <div class="label">justify-items: start</div>
+      <div class="item">1</div><div class="item">2</div><div class="item">3</div>
+    </div>
+  </section>
+
+  <!-- align-items -->
+  <section>
+    <h2>align-items</h2>
+    <p>Alinea los ítems en el eje vertical dentro de cada celda.</p>
+    <div class="controls">
+      <button onclick="setGridProp('alignItemsBox','alignItems','start')">start</button>
+      <button onclick="setGridProp('alignItemsBox','alignItems','center')">center</button>
+      <button onclick="setGridProp('alignItemsBox','alignItems','end')">end</button>
+      <button onclick="setGridProp('alignItemsBox','alignItems','stretch')">stretch</button>
+    </div>
+    <div id="alignItemsBox" class="grid-container" style="grid-template-columns: repeat(3,1fr); align-items:start; height:150px;">
+      <div class="label">align-items: start</div>
+      <div class="item">1</div><div class="item" style="font-size:24px;">2</div><div class="item">3</div>
+    </div>
+  </section>
+
+  <!-- justify-content -->
+  <section>
+    <h2>justify-content</h2>
+    <p>Alinea toda la grilla en el eje horizontal.</p>
+    <div class="controls">
+      <button onclick="setGridProp('justifyContentBox','justifyContent','start')">start</button>
+      <button onclick="setGridProp('justifyContentBox','justifyContent','center')">center</button>
+      <button onclick="setGridProp('justifyContentBox','justifyContent','end')">end</button>
+      <button onclick="setGridProp('justifyContentBox','justifyContent','space-between')">space-between</button>
+      <button onclick="setGridProp('justifyContentBox','justifyContent','space-around')">space-around</button>
+      <button onclick="setGridProp('justifyContentBox','justifyContent','space-evenly')">space-evenly</button>
+    </div>
+    <div id="justifyContentBox" class="grid-container" style="grid-template-columns: 100px 100px; justify-content:start;">
+      <div class="label">justify-content: start</div>
+      <div class="item">1</div><div class="item">2</div>
+    </div>
+  </section>
+
+  <!-- align-content -->
+  <section>
+    <h2>align-content</h2>
+    <div class="controls">
+      <button onclick="setGridProp('alignContentBox','alignContent','start')">start</button>
+      <button onclick="setGridProp('alignContentBox','alignContent','center')">center</button>
+      <button onclick="setGridProp('alignContentBox','alignContent','end')">end</button>
+      <button onclick="setGridProp('alignContentBox','alignContent','space-between')">space-between</button>
+      <button onclick="setGridProp('alignContentBox','alignContent','space-around')">space-around</button>
+      <button onclick="setGridProp('alignContentBox','alignContent','space-evenly')">space-evenly</button>
+      <button onclick="setGridProp('alignContentBox','alignContent','stretch')">stretch</button>
+    </div>
+    <div id="alignContentBox" class="grid-container" style="grid-template-columns: repeat(2,100px); grid-template-rows: repeat(2,50px); align-content:start; height:200px;">
+      <div class="label">align-content: start</div>
+      <div class="item">1</div><div class="item">2</div><div class="item">3</div><div class="item">4</div>
+    </div>
+  </section>
+
+  <!-- grid-column / grid-row -->
+  <section>
+    <h2>grid-column & grid-row</h2>
+    <p>Permite que un ítem ocupe más de una columna o fila.</p>
+    <div class="controls">
+      <button onclick="setGridItemSpan('spanBox',1,'gridColumn','span 1')">Item1: col span 1</button>
+      <button onclick="setGridItemSpan('spanBox',1,'gridColumn','span 2')">Item1: col span 2</button>
+      <button onclick="setGridItemSpan('spanBox',2,'gridRow','span 1')">Item2: row span 1</button>
+      <button onclick="setGridItemSpan('spanBox',2,'gridRow','span 2')">Item2: row span 2</button>
+    </div>
+    <div id="spanBox" class="grid-container" style="grid-template-columns: repeat(3,1fr); grid-template-rows: repeat(2,100px);">
+      <div class="label">grid-column / grid-row</div>
+      <div class="item">1</div><div class="item">2</div><div class="item">3</div><div class="item">4</div><div class="item">5</div><div class="item">6</div>
+    </div>
+  </section>
+
+  <script>
+    function setGridProp(containerId, prop, value) {
+      const box = document.getElementById(containerId);
+      box.style[prop] = value;
+      box.querySelector('.label').textContent = `${prop}: ${value}`;
+    }
+
+    function setGridItemSpan(containerId, index, prop, value) {
+      const box = document.getElementById(containerId);
+      const items = box.querySelectorAll('.item');
+      items[index-1].style[prop] = value;
+      box.querySelector('.label').textContent = `${prop}: item${index}=${value}`;
+    }
+  </script>
+</body>
+</html>
