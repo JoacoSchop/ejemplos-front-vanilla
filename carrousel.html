@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Playground - Carousel</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f8f9fa;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .carousel-container {
+      position: relative;
+      width: 600px;
+      margin: auto;
+      overflow: hidden; /* Para que no se vean las imágenes fuera del marco */
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .carousel-track {
+      display: flex;
+      transition: transform 0.5s ease; /* Animación suave */
+    }
+
+    .carousel-item {
+      min-width: 600px; /* Cada imagen ocupa todo el ancho del contenedor */
+      height: 350px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: white;
+      font-weight: bold;
+    }
+
+    /* Colores distintos para diferenciar los slides */
+    .item1 { background: #ff6b6b; }
+    .item2 { background: #6bc5ff; }
+    .item3 { background: #6bff95; }
+    .item4 { background: #fffd6b; }
+    .item5 { background: #ff6beb; }
+
+    /* Botones de navegación */
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.5);
+      color: white;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 50%;
+    }
+
+    .prev { left: 10px; }
+    .next { right: 10px; }
+    
+    #log {
+      margin-top: 20px;
+      padding: 10px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      font-family: monospace;
+    }
+
+    /* Explicación */
+    .explanation {
+      margin-top: 40px;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+
+    code {
+      background: #eee;
+      padding: 2px 5px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Playground - Carousel (Carrusel)</h1>
+
+  <div class="carousel-container">
+    <div class="carousel-track">
+      <div class="carousel-item item1">Slide 1</div>
+      <div class="carousel-item item2">Slide 2</div>
+      <div class="carousel-item item3">Slide 3</div>
+      <div class="carousel-item item4">Slide 4</div>
+      <div class="carousel-item item5">Slide 5</div>
+    </div>
+    <button class="carousel-btn prev">◀</button>
+    <button class="carousel-btn next">▶</button>
+  </div>
+
+  <div id="log"></div>
+
+  <div class="explanation">
+    <h2>Explicación Teórica</h2>
+    <p>Un <strong>carrusel</strong> funciona desplazando horizontalmente un "track" que contiene varios elementos (imágenes, tarjetas, etc.).</p>
+    <ul>
+      <li><code>overflow: hidden</code>: oculta lo que queda fuera del área visible.</li>
+      <li>Los elementos se ponen en fila con <code>display: flex</code> en el track.</li>
+      <li>El desplazamiento se logra modificando <code>transform: translateX()</code> del track.</li>
+      <li>La transición (<code>transition: transform 0.5s</code>) genera la animación suave.</li>
+      <li>Los botones "prev" y "next" cambian el índice actual y ajustan el desplazamiento.</li>
+    </ul>
+    <p>Este mismo patrón se puede mejorar con:
+      <br> - Auto-play (avanzar cada X segundos).
+      <br> - Dots de navegación.
+      <br> - Swipe en pantallas táctiles.
+    </p>
+  </div>
+
+  <script>
+    // Seleccionamos elementos principales
+    const track = document.querySelector(".carousel-track");
+    const slides = Array.from(track.children);
+    const prevButton = document.querySelector(".prev");
+    const nextButton = document.querySelector(".next");
+    const log = document.getElementById("log");
+
+    // Índice que representa el slide actual
+    let currentIndex = 0;
+
+    const totalSlides = document.querySelectorAll(".carousel-item").length;
+
+    // Función para mover el track
+    function updateCarousel() {
+      // Calculamos cuánto debemos desplazar (negativo porque vamos a la izquierda)
+      const slideWidth = slides[0].getBoundingClientRect().width;
+      const amountToMove = -currentIndex * slideWidth;
+
+      track.style.transform = `translateX(${amountToMove}px)`;
+      console.log("Slide actual:", currentIndex + 1);
+      log.innerText = `Slide actual: ${currentIndex + 1} de ${totalSlides}`;
+    }
+
+    // Funciones para avanzar y retroceder
+    function nextSlide() {
+      currentIndex = (currentIndex + 1) % totalSlides;
+      updateCarousel();
+    }
+
+    function prevSlide() {
+      currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+      updateCarousel();
+    }
+
+
+    // Listeners para los botones
+    nextButton.addEventListener("click", nextSlide);
+    prevButton.addEventListener("click", prevSlide);
+
+    // Iniciamos en la posición correcta
+    updateCarousel();
+    
+    // Autoplay cada 3 segundos
+    setInterval(nextSlide, 3000);
+  </script>
+</body>
+</html>
