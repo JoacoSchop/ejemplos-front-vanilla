@@ -40,6 +40,14 @@
       gap: .5rem;
     }
 
+    .raw-grid-container {
+      background: white;
+      border: 1px solid #ccc;
+      padding: 1rem;
+      margin-top: 1rem;
+      min-height: 200px;
+    }
+
     .label {
       position: absolute;
       top: 5px;
@@ -63,8 +71,21 @@
       transition: all 0.3s ease;
     }
 
+    .raw-grid-item {
+      background: #22c55e;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+
     .controls {
       margin-top: 10px;
+    }
+
+    .distinto{
+      background-color: gold;
     }
 
     button {
@@ -85,6 +106,21 @@
   <header>
     <h1>CSS Grid Playground Interactivo</h1>
     </header>
+
+    <!-- Libre -->
+    <section class="principal">
+      <h2>Prueba</h2>
+      <h4>Juga aca editando las propiedades flexbox en las herramientas de desarrollo para ver los cambios en vivo!</h4>
+      <div class="raw-grid-container">
+        <div class="raw-grid-item">1</div>
+        <div class="raw-grid-item">2</div>
+        <div class="raw-grid-item">3</div>
+        <div class="raw-grid-item distinto">4</div>
+        <div class="raw-grid-item">5</div>
+        <div class="raw-grid-item">6</div>
+        <div class="raw-grid-item">7</div>
+      </div>
+    </section>
 
   <!-- grid-template-columns -->
   <section>
