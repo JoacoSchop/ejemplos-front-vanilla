@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Playground - Canvas Drawing</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    #canvas {
+      border: 2px solid #333;
+      background: #fff;
+      display: block;
+      margin: 0 auto 20px;
+      cursor: crosshair;
+    }
+    .controls {
+      margin-bottom: .5rem;
+    }
+    button, select, input {
+      margin: 5px;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 6px;
+      background: #007bff;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover, select:hover, input:hover {
+      background: #0056b3;
+    }
+    .log, .explanation {
+      background: #fff;
+      border-radius: 8px;
+      padding: 15px;
+      margin-top: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      text-align: left;
+    }
+    .log {
+      font-family: monospace;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>Playground - Canvas Drawing 🖌️</h1>
+  <canvas id="canvas" width="600" height="400"></canvas>
+
+  <div class="controls">
+    Color: 
+    <input type="color" id="colorPicker" value="#000000">
+    Tamaño: 
+    <select id="brushSize">
+      <option value="2">Pequeño</option>
+      <option value="5" selected>Medio</option>
+      <option value="10">Grande</option>
+    </select>
+    <button onclick="clearCanvas()">Limpiar Canvas</button>
+  </div>
+  
+  <div class="controls">
+    <p style="display: inline;">Dibujar: </p>
+    <button onclick="drawRectangle()">Rectángulo</button>
+    <button onclick="drawCircle()">Círculo</button>
+    <button onclick="drawLine()">Línea</button>
+  </div>
+
+  <div class="log" id="log">[LOG] Acciones aparecerán aquí...</div>
+
+  <div class="explanation">
+    <h2>Cómo funciona este Playground</h2>
+    <p>Este playground permite dibujar con el mouse sobre un canvas:</p>
+    <ul>
+      <li>Se usa <code>mousedown</code> para iniciar el dibujo.</li>
+      <li>Se usa <code>mousemove</code> mientras el mouse está presionado para dibujar líneas continuas.</li>
+      <li>Se usa <code>mouseup</code> o <code>mouseleave</code> para detener el dibujo.</li>
+      <li><code>ctx.beginPath()</code> inicia una nueva ruta para no conectar líneas previas.</li>
+      <li><code>ctx.strokeStyle</code> define el color del trazo.</li>
+      <li><code>ctx.lineWidth</code> define el grosor del pincel.</li>
+      <li><code>clearRect()</code> limpia todo el canvas.</li>
+    </ul>
+    <p>Se puede combinar con otras funciones de Canvas para crear animaciones, formas y efectos.</p>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    const log = document.getElementById("log");
+    const colorPicker = document.getElementById("colorPicker");
+    const brushSize = document.getElementById("brushSize");
+
+    let drawing = false;
+
+     // Dibujar un rectángulo
+    function drawRectangle() {
+      ctx.fillStyle = "skyblue";
+      ctx.fillRect(50, 50, 100, 80);
+      logMessage("Dibujado un rectángulo en (50,50).");
+    }
+
+    // Dibujar un círculo
+    function drawCircle() {
+      ctx.beginPath();
+      ctx.arc(250, 150, 40, 0, Math.PI * 2);
+      ctx.fillStyle = "tomato";
+      ctx.fill();
+      ctx.closePath();
+      logMessage("Dibujado un círculo en (250,150).");
+    }
+
+    // Dibujar una línea
+    function drawLine() {
+      ctx.beginPath();
+      ctx.moveTo(400, 50);
+      ctx.lineTo(480, 200);
+      ctx.strokeStyle = "green";
+      ctx.lineWidth = 3;
+      ctx.stroke();
+      ctx.closePath();
+      logMessage("Dibujada una línea de (400,50) a (480,200).");
+    }
+
+    function logMessage(message) {
+      log.textContent += message + "\n";
+      log.scrollTop = log.scrollHeight;
+    }
+
+    // Iniciar dibujo
+    canvas.addEventListener("mousedown", (e) => {
+      drawing = true;
+      ctx.beginPath();
+      ctx.moveTo(e.offsetX, e.offsetY);
+      logMessage(`Inicio dibujo en (${e.offsetX}, ${e.offsetY})`);
+    });
+
+    // Dibujar mientras el mouse se mueve
+    canvas.addEventListener("mousemove", (e) => {
+      if (!drawing) return;
+      ctx.lineTo(e.offsetX, e.offsetY);
+      ctx.strokeStyle = colorPicker.value;
+      ctx.lineWidth = brushSize.value;
+      ctx.stroke();
+    });
+
+    // Detener dibujo
+    canvas.addEventListener("mouseup", () => {
+      drawing = false;
+      logMessage("Dibujo terminado");
+    });
+
+    canvas.addEventListener("mouseleave", () => {
+      if (drawing) {
+        drawing = false;
+        logMessage("Dibujo interrumpido (mouse salió del canvas)");
+      }
+    });
+
+    // Limpiar canvas
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      logMessage("Canvas limpiado");
+    }
+  </script>
+</body>
+</html>
