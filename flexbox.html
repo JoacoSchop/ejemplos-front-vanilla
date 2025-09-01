@@ -1,221 +1,347 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>Flexbox Playground Interactivo</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background: #f4f6f8;
-      color: #333;
-    }
-
-    header {
-      background: #4f46e5;
-      color: white;
-      text-align: center;
-      padding: .75rem;
-
-      h1{
-        margin-block: .4rem;
+  <head>
+    <meta charset="UTF-8" />
+    <title>Flexbox Playground Interactivo</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background: #f4f6f8;
+        color: #333;
       }
-    }
 
-    section {
-      padding: 2rem;
-      border-bottom: 1px solid #ddd;
-    }
+      header {
+        background: #60a5fa;
+        color: white;
+        text-align: center;
+        padding: 0.75rem;
 
-    h2 {
-      margin-bottom: 1rem;
-      color: #4f46e5;
-    }
+        h1 {
+          margin-block: 0.4rem;
+        }
+      }
 
-    .container {
-      display: flex;
-      gap: 10px;
-      background: white;
-      border: 1px solid #ccc;
-      padding: 1rem;
-      margin-top: 1rem;
-      min-height: 120px;
-      position: relative;
-      transition: all 0.3s ease; 
-    }
+      section {
+        padding: 2rem;
+        border-bottom: 1px solid #ddd;
+      }
 
-    .label {
-      position: absolute;
-      top: 5px;
-      right: 10px;
-      background: #4f46e5;
-      color: white;
-      padding: 5px 10px;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      font-weight: bold;
-      transition: all 0.3s ease; 
-    }
+      h2 {
+        color: #4f46e5;
+      }
 
-    .item {
-      background: #60a5fa;
-      color: white;
-      text-align: center;
-      padding: 20px;
-      flex: 0 0 auto;
-      border-radius: 8px;
-      font-weight: bold;
-      transition: all 0.3s ease;
-    }
+      h2, h4{
+        margin: 0;
+      }
 
-    
-    .controls {
-      margin-top: 10px;
-    }
-    button {
-      margin: 2px;
-      padding: 6px 10px;
-      border: none;
-      border-radius: 6px;
-      background: #e5e7eb;
-      cursor: pointer;
-      transition: background 0.2s ease;
-    }
-    button:hover {
-      background: #cbd5e1;
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <h1>Flexbox Playground Interactivo</h1>
-  </header>
+      .container {
+        display: flex;
+        gap: 10px;
+        background: white;
+        border: 1px solid #ccc;
+        padding: 1rem;
+        margin-top: 1rem;
+        min-height: 120px;
+        position: relative;
+        transition: all 0.3s ease;
+      }
 
-  <!-- flex-direction -->
-  <section>
-    <h2>flex-direction</h2>
-    <p>Cambia la dirección principal de los ítems.</p>
-    <div class="controls">
-      <button onclick="setProp('directionBox','flexDirection','row')">row</button>
-      <button onclick="setProp('directionBox','flexDirection','row-reverse')">row-reverse</button>
-      <button onclick="setProp('directionBox','flexDirection','column')">column</button>
-      <button onclick="setProp('directionBox','flexDirection','column-reverse')">column-reverse</button>
-    </div>
-    <div id="directionBox" class="container" style="flex-direction:row;">
-      <div class="label">flex-direction: row</div>
-      <div class="item">1</div><div class="item">2</div><div class="item">3</div>
-    </div>
-  </section>
+      .raw-container {
+        gap: .75rem;
+        background: white;
+        border: 1px solid #ccc;
+        padding: 1rem;
+        margin-top: 1rem;
+        min-height: 20rem;
+      }
 
-  <!-- justify-content -->
-  <section>
-    <h2>justify-content</h2>
-    <p>Alinea los ítems a lo largo del eje principal.</p>
-    <div class="controls">
-      <button onclick="setProp('justifyBox','justifyContent','flex-start')">flex-start</button>
-      <button onclick="setProp('justifyBox','justifyContent','center')">center</button>
-      <button onclick="setProp('justifyBox','justifyContent','flex-end')">flex-end</button>
-      <button onclick="setProp('justifyBox','justifyContent','space-between')">space-between</button>
-      <button onclick="setProp('justifyBox','justifyContent','space-around')">space-around</button>
-      <button onclick="setProp('justifyBox','justifyContent','space-evenly')">space-evenly</button>
-    </div>
-    <div id="justifyBox" class="container" style="justify-content:flex-start;">
-      <div class="label">justify-content: flex-start</div>
-      <div class="item">1</div><div class="item">2</div><div class="item">3</div>
-    </div>
-  </section>
+      .principal{
+        min-height: 75vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
 
-  <!-- align-items -->
-  <section>
-    <h2>align-items</h2>
-    <p>Alinea los ítems en el eje transversal.</p>
-    <div class="controls">
-      <button onclick="setProp('alignBox','alignItems','flex-start')">flex-start</button>
-      <button onclick="setProp('alignBox','alignItems','center')">center</button>
-      <button onclick="setProp('alignBox','alignItems','flex-end')">flex-end</button>
-      <button onclick="setProp('alignBox','alignItems','stretch')">stretch</button>
-      <button onclick="setProp('alignBox','alignItems','baseline')">baseline</button>
-    </div>
-    <div id="alignBox" class="container" style="align-items:flex-start;height:150px;">
-      <div class="label">align-items: flex-start</div>
-      <div class="item">1</div><div class="item">2</div><div class="item" style="font-size:24px;">3</div>
-    </div>
-  </section>
+      .label {
+        position: absolute;
+        top: 5px;
+        right: 10px;
+        background: #4f46e5;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        transition: all 0.3s ease;
+      }
 
-  <!-- flex-wrap -->
-  <section>
-    <h2>flex-wrap</h2>
-    <p>Permite que los ítems salten de línea.</p>
-    <div class="controls">
-      <button onclick="setProp('wrapBox','flexWrap','nowrap')">nowrap</button>
-      <button onclick="setProp('wrapBox','flexWrap','wrap')">wrap</button>
-      <button onclick="setProp('wrapBox','flexWrap','wrap-reverse')">wrap-reverse</button>
-    </div>
-    <div id="wrapBox" class="container" style="flex-wrap:nowrap;">
-      <div class="label">flex-wrap: nowrap</div>
-      <div class="item">1</div><div class="item">2</div><div class="item">3</div>
-      <div class="item">4</div><div class="item">5</div><div class="item">6</div>
-    </div>
-  </section>
+      .item {
+        background: #60a5fa;
+        color: white;
+        text-align: center;
+        padding: 1rem;
+        flex: 0 0 auto;
+        border-radius: .5rem;
+        font-weight: bold;
+        transition: all 0.3s ease;
+      }
 
-  <!-- flex-grow -->
-  <section>
-    <h2>flex-grow</h2>
-    <p>Hace que un ítem ocupe el espacio disponible.</p>
-    <div class="controls">
-      <button onclick="setItemProp('growBox',2,'flexGrow','0')">item 2: grow=0</button>
-      <button onclick="setItemProp('growBox',2,'flexGrow','1')">item 2: grow=1</button>
-      <button onclick="setItemProp('growBox',2,'flexGrow','2')">item 2: grow=2</button>
-    </div>
-    <div id="growBox" class="container">
-      <div class="label">flex-grow: item2=0</div>
-      <div class="item">1</div><div class="item">2</div><div class="item">3</div>
-    </div>
-  </section>
+      .raw-item {
+        background: #60a5fa;
+        color: white;
+        text-align: center;
+        padding: 1rem;
+        border-radius: .5rem;
+        font-weight: bold;
+      }
 
-  <!-- flex-shrink -->
-  <section>
-    <h2>flex-shrink</h2>
-    <p>Permite que un ítem se encoja más que los demás.</p>
-    <div class="controls">
-      <button onclick="setItemProp('shrinkBox',2,'flexShrink','0')">item 2: shrink=0</button>
-      <button onclick="setItemProp('shrinkBox',2,'flexShrink','1')">item 2: shrink=1</button>
-      <button onclick="setItemProp('shrinkBox',2,'flexShrink','3')">item 2: shrink=3</button>
-    </div>
-    <div id="shrinkBox" class="container" style="width:300px;">
-      <div class="label">flex-shrink: item2=1</div>
-      <div class="item">1</div><div class="item" style="width:200px;">2</div><div class="item">3</div>
-    </div>
-  </section>
+      .distinto{
+        background-color: gold;
+      }
 
-  <!-- flex-basis -->
-  <section>
-    <h2>flex-basis</h2>
-    <p>Define el tamaño inicial de un ítem.</p>
-    <div class="controls">
-      <button onclick="setItemProp('basisBox',2,'flexBasis','100px')">item 2: basis=100px</button>
-      <button onclick="setItemProp('basisBox',2,'flexBasis','200px')">item 2: basis=200px</button>
-      <button onclick="setItemProp('basisBox',2,'flexBasis','300px')">item 2: basis=300px</button>
-    </div>
-    <div id="basisBox" class="container">
-      <div class="label">flex-basis: item2=auto</div>
-      <div class="item">1</div><div class="item">2</div><div class="item">3</div>
-    </div>
-  </section>
+      .controls {
+        margin-top: 10px;
+      }
+      button {
+        margin: 2px;
+        padding: 6px 10px;
+        border: none;
+        border-radius: 6px;
+        background: #e5e7eb;
+        cursor: pointer;
+        transition: background 0.2s ease;
+      }
+      button:hover {
+        background: #cbd5e1;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Flexbox Playground Interactivo</h1>
+    </header>
 
-  <script>
-    function setProp(containerId, prop, value) {
-      const box = document.getElementById(containerId);
-      box.style[prop] = value;
-      box.querySelector('.label').textContent = `${prop}: ${value}`;
-    }
+    <!-- Libre -->
+    <section class="principal">
+      <h2>Prueba</h2>
+      <h4>Juga aca editando las propiedades flexbox en las herramientas de desarrollo para ver los cambios en vivo!</h4>
+      <div class="raw-container">
+        <div class="raw-item">1</div>
+        <div class="raw-item">2</div>
+        <div class="raw-item">3</div>
+        <div class="raw-item distinto">4</div>
+        <div class="raw-item">5</div>
+        <div class="raw-item">6</div>
+        <div class="raw-item">7</div>
+      </div>
+    </section>
 
-    function setItemProp(containerId, index, prop, value) {
-      const box = document.getElementById(containerId);
-      const items = box.querySelectorAll('.item');
-      items[index-1].style[prop] = value;
-      box.querySelector('.label').textContent = `${prop}: item${index}=${value}`;
-    }
-  </script>
-</body>
+    <!-- flex-direction -->
+    <section>
+      <h2>flex-direction</h2>
+      <p>Cambia la dirección principal de los ítems.</p>
+      <div class="controls">
+        <button onclick="setProp('directionBox','flexDirection','row')">
+          row
+        </button>
+        <button onclick="setProp('directionBox','flexDirection','row-reverse')">
+          row-reverse
+        </button>
+        <button onclick="setProp('directionBox','flexDirection','column')">
+          column
+        </button>
+        <button
+          onclick="setProp('directionBox','flexDirection','column-reverse')"
+        >
+          column-reverse
+        </button>
+      </div>
+      <div id="directionBox" class="container" style="flex-direction: row">
+        <div class="label">flex-direction: row</div>
+        <div class="item">1</div>
+        <div class="item">2</div>
+        <div class="item">3</div>
+      </div>
+    </section>
+
+    <!-- justify-content -->
+    <section>
+      <h2>justify-content</h2>
+      <p>Alinea los ítems a lo largo del eje principal.</p>
+      <div class="controls">
+        <button onclick="setProp('justifyBox','justifyContent','flex-start')">
+          flex-start
+        </button>
+        <button onclick="setProp('justifyBox','justifyContent','center')">
+          center
+        </button>
+        <button onclick="setProp('justifyBox','justifyContent','flex-end')">
+          flex-end
+        </button>
+        <button
+          onclick="setProp('justifyBox','justifyContent','space-between')"
+        >
+          space-between
+        </button>
+        <button onclick="setProp('justifyBox','justifyContent','space-around')">
+          space-around
+        </button>
+        <button onclick="setProp('justifyBox','justifyContent','space-evenly')">
+          space-evenly
+        </button>
+      </div>
+      <div
+        id="justifyBox"
+        class="container"
+        style="justify-content: flex-start"
+      >
+        <div class="label">justify-content: flex-start</div>
+        <div class="item">1</div>
+        <div class="item">2</div>
+        <div class="item">3</div>
+      </div>
+    </section>
+
+    <!-- align-items -->
+    <section>
+      <h2>align-items</h2>
+      <p>Alinea los ítems en el eje transversal.</p>
+      <div class="controls">
+        <button onclick="setProp('alignBox','alignItems','flex-start')">
+          flex-start
+        </button>
+        <button onclick="setProp('alignBox','alignItems','center')">
+          center
+        </button>
+        <button onclick="setProp('alignBox','alignItems','flex-end')">
+          flex-end
+        </button>
+        <button onclick="setProp('alignBox','alignItems','stretch')">
+          stretch
+        </button>
+        <button onclick="setProp('alignBox','alignItems','baseline')">
+          baseline
+        </button>
+      </div>
+      <div
+        id="alignBox"
+        class="container"
+        style="align-items: flex-start; height: 150px"
+      >
+        <div class="label">align-items: flex-start</div>
+        <div class="item">1</div>
+        <div class="item">2</div>
+        <div class="item" style="font-size: 24px">3</div>
+      </div>
+    </section>
+
+    <!-- flex-wrap -->
+    <section>
+      <h2>flex-wrap</h2>
+      <p>Permite que los ítems salten de línea.</p>
+      <div class="controls">
+        <button onclick="setProp('wrapBox','flexWrap','nowrap')">nowrap</button>
+        <button onclick="setProp('wrapBox','flexWrap','wrap')">wrap</button>
+        <button onclick="setProp('wrapBox','flexWrap','wrap-reverse')">
+          wrap-reverse
+        </button>
+      </div>
+      <div id="wrapBox" class="container" style="flex-wrap: nowrap">
+        <div class="label">flex-wrap: nowrap</div>
+        <div class="item">1</div>
+        <div class="item">2</div>
+        <div class="item">3</div>
+        <div class="item">4</div>
+        <div class="item">5</div>
+        <div class="item">6</div>
+      </div>
+    </section>
+
+    <!-- flex-grow -->
+    <section>
+      <h2>flex-grow</h2>
+      <p>Hace que un ítem ocupe el espacio disponible.</p>
+      <div class="controls">
+        <button onclick="setItemProp('growBox',2,'flexGrow','0')">
+          item 2: grow=0
+        </button>
+        <button onclick="setItemProp('growBox',2,'flexGrow','1')">
+          item 2: grow=1
+        </button>
+        <button onclick="setItemProp('growBox',2,'flexGrow','2')">
+          item 2: grow=2
+        </button>
+      </div>
+      <div id="growBox" class="container">
+        <div class="label">flex-grow: item2=0</div>
+        <div class="item">1</div>
+        <div class="item">2</div>
+        <div class="item">3</div>
+      </div>
+    </section>
+
+    <!-- flex-shrink -->
+    <section>
+      <h2>flex-shrink</h2>
+      <p>Permite que un ítem se encoja más que los demás.</p>
+      <div class="controls">
+        <button onclick="setItemProp('shrinkBox',2,'flexShrink','0')">
+          item 2: shrink=0
+        </button>
+        <button onclick="setItemProp('shrinkBox',2,'flexShrink','1')">
+          item 2: shrink=1
+        </button>
+        <button onclick="setItemProp('shrinkBox',2,'flexShrink','3')">
+          item 2: shrink=3
+        </button>
+      </div>
+      <div id="shrinkBox" class="container" style="width: 300px">
+        <div class="label">flex-shrink: item2=1</div>
+        <div class="item">1</div>
+        <div class="item" style="width: 200px">2</div>
+        <div class="item">3</div>
+      </div>
+    </section>
+
+    <!-- flex-basis -->
+    <section>
+      <h2>flex-basis</h2>
+      <p>Define el tamaño inicial de un ítem.</p>
+      <div class="controls">
+        <button onclick="setItemProp('basisBox',2,'flexBasis','100px')">
+          item 2: basis=100px
+        </button>
+        <button onclick="setItemProp('basisBox',2,'flexBasis','200px')">
+          item 2: basis=200px
+        </button>
+        <button onclick="setItemProp('basisBox',2,'flexBasis','300px')">
+          item 2: basis=300px
+        </button>
+      </div>
+      <div id="basisBox" class="container">
+        <div class="label">flex-basis: item2=auto</div>
+        <div class="item">1</div>
+        <div class="item">2</div>
+        <div class="item">3</div>
+      </div>
+    </section>
+
+    <script>
+      function setProp(containerId, prop, value) {
+        const box = document.getElementById(containerId);
+        box.style[prop] = value;
+        box.querySelector(".label").textContent = `${prop}: ${value}`;
+      }
+
+      function setItemProp(containerId, index, prop, value) {
+        const box = document.getElementById(containerId);
+        const items = box.querySelectorAll(".item");
+        items[index - 1].style[prop] = value;
+        box.querySelector(
+          ".label"
+        ).textContent = `${prop}: item${index}=${value}`;
+      }
+    </script>
+  </body>
 </html>
