@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Playground Drag & Drop API</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 30px;
+        background: #f4f4f4;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      p {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      main {
+        min-height: 100vh;
+      }
+
+      section {
+        margin-top: 2rem;
+        padding: 1rem;
+        background: #ddd;
+        border-radius: 8px;
+      }
+
+      .container {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 30px;
+      }
+
+      .dropzone {
+        flex: 1;
+        margin: 0 10px;
+        min-height: 200px;
+        background: #e0e0e0;
+        border: 2px dashed #aaa;
+        border-radius: 8px;
+        padding: 10px;
+        transition: background 0.3s;
+      }
+
+      .dropzone.over {
+        background: #c8e6c9; /* Verde clarito cuando un elemento está encima */
+      }
+
+      .draggable {
+        padding: 10px;
+        margin: 10px 0;
+        background: #90caf9;
+        border-radius: 5px;
+        cursor: grab;
+      }
+
+      .log {
+        margin-top: 20px;
+        padding: 10px;
+        background: #212121;
+        color: #fff;
+        border-radius: 5px;
+        font-family: monospace;
+        max-height: 200px;
+        overflow-y: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Playground Drag & Drop API</h1>
+      <p>
+        Arrastrá los bloques azules entre las distintas zonas. <br />
+        El log al final muestra los eventos de la API en tiempo real.
+      </p>
+
+      <!-- Contenedor principal con 3 zonas -->
+      <div class="container">
+        <div class="dropzone" id="zone1">
+          <h3>Zona 1</h3>
+          <div class="draggable" draggable="true" id="item1">Bloque 1</div>
+          <div class="draggable" draggable="true" id="item2">Bloque 2</div>
+          <div class="draggable" draggable="true" id="item3">Bloque 3</div>
+          <div class="draggable" draggable="true" id="item4">Bloque 4</div>
+          <div class="draggable" draggable="true" id="item5">Bloque 5</div>
+        </div>
+
+        <div class="dropzone" id="zone2">
+          <h3>Zona 2</h3>
+        </div>
+
+        <div class="dropzone" id="zone3">
+          <h3>Zona 3</h3>
+        </div>
+      </div>
+
+      <!-- Log -->
+      <div class="log" id="log"></div>
+    </main>
+
+    <!-- Explicación teórica de la API Drag & Drop -->
+    <section>
+      <h2>📚 Teoría: API Drag & Drop</h2>
+      <p>
+        La API <strong>Drag & Drop</strong> de HTML5 permite arrastrar y soltar
+        elementos dentro de la página. Funciona principalmente a través de
+        <strong>eventos</strong> y del objeto <code>DataTransfer</code>.
+      </p>
+
+      <h3>🔑 Eventos principales:</h3>
+      <ul>
+        <li>
+          <code>dragstart</code> → Se dispara cuando comienza a arrastrarse un
+          elemento. Aquí se suele usar
+          <code>event.dataTransfer.setData()</code> para guardar información.
+        </li>
+        <li>
+          <code>dragover</code> → Ocurre cuando un elemento arrastrado pasa
+          sobre una zona de destino. Es obligatorio usar
+          <code>event.preventDefault()</code> para permitir soltar.
+        </li>
+        <li>
+          <code>drop</code> → Se dispara cuando soltamos el elemento en la zona
+          válida. Aquí recuperamos la información con
+          <code>event.dataTransfer.getData()</code>.
+        </li>
+        <li>
+          <code>dragend</code> → Ocurre cuando termina el arrastre, ya sea con
+          éxito o no.
+        </li>
+      </ul>
+
+      <h3>📦 Objeto <code>DataTransfer</code>:</h3>
+      <p>
+        Este objeto transporta datos mientras arrastramos. Sus métodos más
+        usados son:
+      </p>
+      <ul>
+        <li>
+          <code>setData(format, data)</code> → Guarda datos durante el arrastre
+          (ejemplo: ID del elemento).
+        </li>
+        <li>
+          <code>getData(format)</code> → Recupera los datos guardados al soltar.
+        </li>
+        <li>
+          <code>effectAllowed</code> y <code>dropEffect</code> → Controlan el
+          tipo de operación (copiar, mover, link).
+        </li>
+      </ul>
+
+      <h3>📝 Flujo típico:</h3>
+      <ol>
+        <li>El elemento arrastrable tiene <code>draggable="true"</code>.</li>
+        <li>
+          En <code>dragstart</code>, guardamos info con <code>setData()</code>.
+        </li>
+        <li>
+          La zona de destino escucha <code>dragover</code> y permite soltar con
+          <code>preventDefault()</code>.
+        </li>
+        <li>
+          En <code>drop</code>, obtenemos info con <code>getData()</code> y
+          movemos el elemento.
+        </li>
+      </ol>
+    </section>
+
+    <script>
+      // --- Seleccionamos todas las zonas y elementos arrastrables ---
+      const draggables = document.querySelectorAll(".draggable");
+      const dropzones = document.querySelectorAll(".dropzone");
+      const log = document.getElementById("log");
+
+      // --- Función auxiliar para escribir en el log ---
+      function writeLog(message) {
+        log.innerHTML += message + "<br>";
+        log.scrollTop = log.scrollHeight; // Hace que siempre muestre lo último
+      }
+
+      // --- EVENTOS DE LOS ELEMENTOS ARRASTRABLES ---
+      draggables.forEach((draggable) => {
+        draggable.addEventListener("dragstart", (e) => {
+          // Guardamos el id del elemento que estamos arrastrando
+          e.dataTransfer.setData("text/plain", draggable.id);
+          writeLog("▶️ dragstart: " + draggable.id);
+        });
+
+        draggable.addEventListener("dragend", () => {
+          writeLog("🏁 dragend");
+        });
+      });
+
+      // --- EVENTOS DE LAS ZONAS ---
+      dropzones.forEach((zone) => {
+        zone.addEventListener("dragover", (e) => {
+          e.preventDefault(); // Necesario para permitir el drop
+          zone.classList.add("over");
+        });
+
+        zone.addEventListener("dragleave", () => {
+          zone.classList.remove("over");
+        });
+
+        zone.addEventListener("drop", (e) => {
+          e.preventDefault();
+          zone.classList.remove("over");
+
+          // Recuperamos el id del elemento arrastrado
+          const id = e.dataTransfer.getData("text/plain");
+          const draggable = document.getElementById(id);
+
+          // Lo movemos a la nueva zona (se traslada, no se clona)
+          zone.appendChild(draggable);
+
+          writeLog("📥 drop: " + id + " en " + zone.id);
+        });
+      });
+    </script>
+  </body>
+</html>
