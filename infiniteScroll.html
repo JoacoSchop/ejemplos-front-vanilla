@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo - Carga Dinámica con Scroll</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            color: #4a5568;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .header p {
+            color: #718096;
+            font-size: 1.1em;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(20px);
+            opacity: 0;
+            animation: slideIn 0.6s ease-out forwards;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        @keyframes slideIn {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .card-number {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-right: 15px;
+        }
+
+        .card-title {
+            font-size: 1.5em;
+            color: #2d3748;
+            font-weight: 600;
+        }
+
+        .card-content {
+            color: #4a5568;
+            line-height: 1.6;
+            font-size: 1.1em;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: white;
+            font-size: 1.2em;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .stats {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            font-size: 0.9em;
+            color: #4a5568;
+        }
+
+        .end-message {
+            text-align: center;
+            padding: 40px;
+            color: white;
+            font-size: 1.3em;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .stats {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚀 Demo de Scroll Infinito</h1>
+        <p>Demostrando carga dinámica de contenido para estudiantes de Frontend</p>
+    </div>
+
+    <div class="stats" id="stats">
+        <div><strong>Cards cargadas:</strong> <span id="loadedCount">0</span></div>
+        <div><strong>Posición:</strong> <span id="scrollPos">0</span>%</div>
+    </div>
+
+    <div class="container" id="container">
+        <!-- El contenido se carga dinámicamente aquí -->
+    </div>
+
+    <div class="loading" id="loading" style="display: none;">
+        <div class="spinner"></div>
+        <div>Cargando más contenido...</div>
+    </div>
+
+    <script>
+        class InfiniteScrollDemo {
+            constructor() {
+                this.container = document.getElementById('container');
+                this.loading = document.getElementById('loading');
+                this.loadedCount = document.getElementById('loadedCount');
+                this.scrollPos = document.getElementById('scrollPos');
+                
+                this.currentPage = 0;
+                this.itemsPerPage = 5;
+                this.totalItems = 50; // Límite para la demo
+                this.isLoading = false;
+                
+                this.topics = [
+                    "HTML Semántico", "CSS Grid", "Flexbox", "JavaScript ES6+", "React Hooks",
+                    "Vue.js", "Angular", "TypeScript", "Webpack", "Vite",
+                    "SASS/SCSS", "Responsive Design", "CSS Animations", "Web APIs", "Fetch API",
+                    "Promises", "Async/Await", "Local Storage", "Service Workers", "PWA",
+                    "Web Components", "Shadow DOM", "REST APIs", "GraphQL", "Node.js",
+                    "Express.js", "MongoDB", "Git", "Testing", "Performance",
+                    "Accessibility", "SEO", "Security", "Deployment", "Docker",
+                    "CI/CD", "Design Patterns", "MVC", "State Management", "Routing",
+                    "Bundle Optimization", "Code Splitting", "Lazy Loading", "Caching", "WebSockets",
+                    "Real-time Apps", "Authentication", "Authorization", "CORS", "HTTPS"
+                ];
+                
+                this.descriptions = [
+                    "Aprende las mejores prácticas para estructurar tu código HTML de manera semántica y accesible.",
+                    "Domina el sistema de layout más potente de CSS para crear interfaces complejas con facilidad.",
+                    "Entiende cómo crear layouts flexibles y responsivos con esta tecnología fundamental.",
+                    "Explora las características modernas de JavaScript que todo desarrollador debe conocer.",
+                    "Descubre cómo los hooks revolucionaron el desarrollo con React y simplificaron el estado.",
+                    "Framework progresivo que combina lo mejor de React y Angular con una curva de aprendizaje suave.",
+                    "Plataforma robusta para aplicaciones empresariales con TypeScript integrado por defecto.",
+                    "Superset de JavaScript que añade tipado estático para código más seguro y mantenible.",
+                    "Bundler clásico que revolucionó el desarrollo frontend con su sistema de módulos.",
+                    "Build tool moderno que ofrece desarrollo ultra-rápido con Hot Module Replacement.",
+                    "Preprocesador CSS que añade variables, mixins y funciones para estilos más organizados.",
+                    "Técnicas para crear sitios que se adapten perfectamente a cualquier dispositivo.",
+                    "Crea experiencias visuales impactantes con transiciones y animaciones CSS suaves.",
+                    "Interfaz nativa del navegador para acceder a funcionalidades del sistema operativo.",
+                    "API moderna para realizar peticiones HTTP de manera sencilla y eficiente.",
+                    "Manejo elegante de operaciones asíncronas en JavaScript moderno.",
+                    "Sintaxis limpia para trabajar con código asíncrono sin callback hell.",
+                    "Almacenamiento persistente en el navegador para mejorar la experiencia del usuario.",
+                    "Scripts que funcionan en segundo plano para crear aplicaciones offline-first.",
+                    "Aplicaciones web que ofrecen experiencia nativa en dispositivos móviles.",
+                    "Tecnología nativa para crear componentes reutilizables y encapsulados.",
+                    "Encapsulación de estilos y funcionalidad para componentes verdaderamente aislados.",
+                    "Arquitectura para APIs que siguen principios de transferencia de estado representacional.",
+                    "Lenguaje de consulta flexible para APIs que permite obtener exactamente los datos necesarios.",
+                    "Runtime de JavaScript del lado del servidor para crear aplicaciones full-stack.",
+                    "Framework minimalista y flexible para crear APIs y aplicaciones web con Node.js.",
+                    "Base de datos NoSQL orientada a documentos, perfecta para aplicaciones modernas.",
+                    "Sistema de control de versiones distribuido esencial para cualquier desarrollador.",
+                    "Metodologías y herramientas para asegurar la calidad del código.",
+                    "Optimización de aplicaciones web para mejorar velocidad y experiencia del usuario.",
+                    "Diseño inclusivo que garantiza que todos puedan usar nuestras aplicaciones web.",
+                    "Optimización para motores de búsqueda en aplicaciones web modernas.",
+                    "Mejores prácticas para proteger aplicaciones web contra vulnerabilidades comunes.",
+                    "Estrategias y herramientas para llevar aplicaciones desde desarrollo hasta producción.",
+                    "Containerización de aplicaciones para desarrollo y despliegue consistente.",
+                    "Automatización de procesos de integración y despliegue continuo.",
+                    "Patrones arquitectónicos que facilitan el mantenimiento y escalabilidad del código.",
+                    "Patrón arquitectónico que separa modelo, vista y controlador para mejor organización.",
+                    "Técnicas para manejar el estado de aplicaciones complejas de manera predecible.",
+                    "Navegación del lado del cliente para crear experiencias de aplicación fluidas.",
+                    "Técnicas para reducir el tamaño de bundles y mejorar tiempos de carga.",
+                    "División inteligente del código para cargar solo lo necesario cuando se necesita.",
+                    "Carga diferida de recursos para optimizar el rendimiento inicial de la aplicación.",
+                    "Estrategias de almacenamiento temporal para reducir peticiones y mejorar rendimiento.",
+                    "Comunicación bidireccional en tiempo real entre cliente y servidor.",
+                    "Desarrollo de aplicaciones que requieren actualizaciones instantáneas y colaborativas.",
+                    "Sistemas seguros para verificar la identidad de usuarios en aplicaciones web.",
+                    "Control de permisos y accesos basado en roles y políticas de seguridad.",
+                    "Política de seguridad que controla qué recursos pueden ser accedidos desde otros dominios.",
+                    "Protocolo seguro esencial para proteger la comunicación entre cliente y servidor."
+                ];
+                
+                this.init();
+            }
+            
+            init() {
+                this.loadInitialContent();
+                this.setupScrollListener();
+                this.setupScrollStats();
+            }
+            
+            loadInitialContent() {
+                this.loadMore();
+            }
+            
+            setupScrollListener() {
+                let timeout;
+                window.addEventListener('scroll', () => {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => {
+                        if (this.shouldLoadMore() && !this.isLoading) {
+                            this.loadMore();
+                        }
+                    }, 100); // Throttling para mejor performance
+                });
+            }
+            
+            setupScrollStats() {
+                window.addEventListener('scroll', () => {
+                    const scrollPercent = Math.round(
+                        (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100
+                    );
+                    this.scrollPos.textContent = Math.min(scrollPercent, 100);
+                });
+            }
+            
+            shouldLoadMore() {
+                const scrollPosition = window.innerHeight + window.scrollY;
+                const threshold = document.documentElement.offsetHeight - 1000;
+                return scrollPosition >= threshold;
+            }
+            
+            async loadMore() {
+                if (this.isLoading || this.hasReachedEnd()) return;
+                
+                this.isLoading = true;
+                this.showLoading();
+                
+                // Simular delay de red
+                await this.delay(800 + Math.random() * 1200);
+                
+                const newItems = this.generateItems();
+                this.renderItems(newItems);
+                
+                this.currentPage++;
+                this.updateStats();
+                this.hideLoading();
+                this.isLoading = false;
+                
+                if (this.hasReachedEnd()) {
+                    this.showEndMessage();
+                }
+            }
+            
+            generateItems() {
+                const items = [];
+                const startIndex = this.currentPage * this.itemsPerPage;
+                
+                for (let i = 0; i < this.itemsPerPage && startIndex + i < this.totalItems; i++) {
+                    const index = startIndex + i;
+                    const topicIndex = index % this.topics.length;
+                    
+                    items.push({
+                        id: index + 1,
+                        title: this.topics[topicIndex],
+                        content: this.descriptions[topicIndex],
+                        category: this.getCategory(topicIndex)
+                    });
+                }
+                
+                return items;
+            }
+            
+            getCategory(index) {
+                const categories = ['Frontend', 'Backend', 'DevOps', 'Testing', 'Performance'];
+                return categories[index % categories.length];
+            }
+            
+            renderItems(items) {
+                const fragment = document.createDocumentFragment();
+                
+                items.forEach((item, index) => {
+                    const card = this.createCard(item);
+                    // Delay escalonado para efecto visual
+                    setTimeout(() => {
+                        fragment.appendChild(card);
+                        if (index === items.length - 1) {
+                            this.container.appendChild(fragment);
+                        }
+                    }, index * 150);
+                });
+                
+                if (items.length === 0) {
+                    this.container.appendChild(fragment);
+                }
+            }
+            
+            createCard(item) {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.style.animationDelay = '0s'; // Reset para nuevos elementos
+                
+                card.innerHTML = `
+                    <div class="card-header">
+                        <div class="card-number">${item.id}</div>
+                        <div>
+                            <div class="card-title">${item.title}</div>
+                            <small style="color: #718096; font-weight: 500;">${item.category}</small>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        ${item.content}
+                        <br><br>
+                        <em style="color: #718096;">💡 Concepto clave para el desarrollo frontend moderno</em>
+                    </div>
+                `;
+                
+                return card;
+            }
+            
+            showLoading() {
+                this.loading.style.display = 'block';
+            }
+            
+            hideLoading() {
+                this.loading.style.display = 'none';
+            }
+            
+            updateStats() {
+                const totalLoaded = this.currentPage * this.itemsPerPage + 
+                                 Math.min(this.itemsPerPage, this.totalItems - this.currentPage * this.itemsPerPage);
+                this.loadedCount.textContent = Math.min(totalLoaded, this.totalItems);
+            }
+            
+            hasReachedEnd() {
+                return this.currentPage * this.itemsPerPage >= this.totalItems;
+            }
+            
+            showEndMessage() {
+                const endMessage = document.createElement('div');
+                endMessage.className = 'end-message';
+                endMessage.innerHTML = `
+                    <h3>🎉 ¡Has llegado al final!</h3>
+                    <p>Has visto todos los ${this.totalItems} conceptos de frontend.</p>
+                    <p><em>Esta demo muestra cómo implementar scroll infinito de manera eficiente.</em></p>
+                `;
+                this.container.appendChild(endMessage);
+            }
+            
+            delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+        }
+        
+        // Inicializar cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', () => {
+            new InfiniteScrollDemo();
+            
+            // Mensaje de bienvenida en consola para los estudiantes
+            console.log(`
+🎓 DEMO DE SCROLL INFINITO PARA ESTUDIANTES
+==========================================
+
+🔍 Conceptos demostrados:
+• Event listeners optimizados con throttling
+• Detección de proximidad al final de página
+• Carga asíncrona simulando APIs reales
+• Animaciones CSS fluidas
+• Responsive design
+• Performance optimization
+
+🛠️ Técnicas aplicadas:
+• Intersection Observer (alternativa avanzada)
+• RequestAnimationFrame para animaciones
+• DocumentFragment para mejor rendimiento
+• CSS transforms en lugar de cambios de layout
+• Lazy loading simulation
+
+¡Revisa el código fuente para aprender más! 🚀
+            `);
+        });
+    </script>
+</body>
+</html>
