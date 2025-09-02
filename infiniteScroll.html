@@ -388,6 +388,7 @@
             // Listener para scroll con throttling
             let timeout;
             window.addEventListener('scroll', function() {
+                console.log(window.scrollY)
                 clearTimeout(timeout);
                 timeout = setTimeout(function() {
                     if (shouldLoadMore() && !isLoading) {
