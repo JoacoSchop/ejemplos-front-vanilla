@@ -1,57 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <link rel="stylesheet" href="./side.css">
-</head>
+      body {
+        background-color: whitesmoke;
+        min-height: 100vh;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        overflow: hidden; /* ocultar scrollbars */
+      }
 
-<body>
-  <button class="nav-btn nav-left" onclick="scrollPrev()">⟨</button>
-  <button class="nav-btn nav-right" onclick="scrollNext()">⟩</button>
+      .container {
+        display: flex;
+        height: 100vh;
+        width: 100vw;
+        overflow-x: scroll;
+        scroll-snap-type: x mandatory; /* snap obligatorio horizontal */
+        scroll-behavior: smooth; /* desplazamiento suave */
+      }
 
+      .pantalla {
+        flex: 0 0 100vw; /* cada sección ocupa el 100% del viewport */
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 5rem;
+        scroll-snap-align: start; /* cada pantalla "encaja" */
+      }
 
-  <main class="container" id="slider">
-    <section class="pantalla pantalla1">1</section>
-    <section class="pantalla pantalla2">2</section>
-    <section class="pantalla pantalla3">3</section>
-    <section class="pantalla pantalla4">4</section>
-  </main>
+      .pantalla1 {
+        background-color: lightskyblue;
+      }
+      .pantalla2 {
+        background-color: lightcoral;
+      }
+      .pantalla3 {
+        background-color: lightgoldenrodyellow;
+      }
+      .pantalla4 {
+        background-color: lightseagreen;
+      }
 
-  <script>
-    const container = document.getElementById("slider");
-    const total = container.children.length;
-    let currentIndex = 0;
+      /* Botones */
+      .nav-btn {
+        position: fixed;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        font-size: 2rem;
+        padding: 1rem;
+        cursor: pointer;
+        z-index: 10;
+      }
+      .nav-left {
+        left: 10px;
+      }
+      .nav-right {
+        right: 10px;
+      }
 
-    function scrollToIndex(index) {
-      const x = index * window.innerWidth;
-      container.scrollTo({ left: x, behavior: "smooth" });
-    }
+      /* Ocultar scrollbar visualmente */
+      .container::-webkit-scrollbar {
+        display: none;
+      }
+      .container {
+        -ms-overflow-style: none; /* IE y Edge */
+        scrollbar-width: none; /* Firefox */
+      }
+    </style>
+  </head>
 
-    function scrollNext() {
-      currentIndex = (currentIndex + 1) % total;                 // 3->0
-      scrollToIndex(currentIndex);
-    }
+  <body>
+    <button class="nav-btn nav-left" onclick="scrollPrev()">⟨</button>
+    <button class="nav-btn nav-right" onclick="scrollNext()">⟩</button>
 
-    function scrollPrev() {
-      currentIndex = (currentIndex - 1 + total) % total;          // 0->3
-      scrollToIndex(currentIndex);
-    }
+    <main class="container" id="slider">
+      <section class="pantalla pantalla1">1</section>
+      <section class="pantalla pantalla2">2</section>
+      <section class="pantalla pantalla3">3</section>
+      <section class="pantalla pantalla4">4</section>
+    </main>
 
-    // Si el usuario arrastra con el mouse/touch, actualizamos el índice
-    container.addEventListener("scroll", () => {
-      const idx = Math.round(container.scrollLeft / window.innerWidth);
-      currentIndex = Math.max(0, Math.min(total - 1, idx));
-    });
+    <script>
+      const container = document.getElementById("slider");
+      const total = container.children.length;
+      let currentIndex = 0;
 
-    // Si cambia el tamaño de la ventana, mantenemos el snap correcto
-    window.addEventListener("resize", () => {
-      scrollToIndex(currentIndex);
-    });
-  </script>
+      function scrollToIndex(index) {
+        const x = index * window.innerWidth;
+        container.scrollTo({ left: x, behavior: "smooth" });
+      }
 
-</body>
+      function scrollNext() {
+        currentIndex = (currentIndex + 1) % total; // 3->0
+        scrollToIndex(currentIndex);
+      }
 
+      function scrollPrev() {
+        currentIndex = (currentIndex - 1 + total) % total; // 0->3
+        scrollToIndex(currentIndex);
+      }
+
+      // Si el usuario arrastra con el mouse/touch, actualizamos el índice
+      container.addEventListener("scroll", () => {
+        const idx = Math.round(container.scrollLeft / window.innerWidth);
+        currentIndex = Math.max(0, Math.min(total - 1, idx));
+      });
+
+      // Si cambia el tamaño de la ventana, mantenemos el snap correcto
+      window.addEventListener("resize", () => {
+        scrollToIndex(currentIndex);
+      });
+    </script>
+  </body>
 </html>
