@@ -1,0 +1,163 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;600;700;800;900&display=swap');
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+body{
+    background-color: black;
+    font-family: "Fira Sans", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+
+    display: flex;
+}
+
+main{
+    height: 100vh;
+    /* width: 60vw; */
+    width: 100vw;
+}
+
+aside{
+    height: 100vh;
+    /* width: 40vw; */
+    width: 100vw;
+}
+
+main.container{
+    background-color: slategray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-y: hidden;
+}
+
+aside.container{
+    background-color: dimgray;
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    padding: 1em;
+
+    .card{
+        width: 200px;
+        height: 300px;
+
+        .avatar{
+            .afa{
+                top: 0.25em;
+                right: 0.25em;
+            }
+            p{
+                font-size: 1em;
+                font-weight: 800;
+            }
+        }
+
+        .name{
+            font-size: 1em;
+            margin-top: 5px;
+        }
+
+        .info table tr{
+            height: 1em;
+            font-size: 0.75em;
+
+            td{
+                height: 1em;
+
+                img{
+                    height: 200%;
+                }
+            }
+        }
+    }
+
+    
+    border-radius: 0.5em;
+}
+
+.card{
+    background: rgb(0,0,40);
+    /* background: linear-gradient(0deg,   rgba(0,0,40,1) 0%,  
+                                        rgba(9,9,121,1) 10%, 
+                                        rgba(255,255,255,1) 100%); */
+    
+    background: linear-gradient(0deg,   rgba(17, 102, 182, 0.8) 0%,  
+                                        rgba(140,220,220,1) 55%, 
+                                        rgb(210, 240, 240) 100%);
+    width: 400px;
+    aspect-ratio: 2 / 3;
+    border-radius: 1em;
+    position: relative;
+
+    section{
+        width: 100%;
+    }
+
+    .avatar{
+        height: 75%;
+        position: relative;
+        display: flex;
+        justify-content: center;
+
+        img{
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .afa{
+            position: absolute;
+            top: 0.5em;
+            right: 0.5em;
+            height: 15%;
+
+            p{
+                text-align: center;
+                /* color: white; */
+                font-size: 2em;
+                font-weight: 1000;
+            }
+        }
+    }
+    .name{
+        height: fit-content;
+        text-align: center;
+        font-size: 2em;
+        color: white;
+        margin-top: 10px;
+    }
+
+    .info{
+        position: absolute;
+        bottom: 0px;
+
+        height: 16%;
+
+        table{
+            width: 100%;
+            color: white;
+
+            tr{
+                height: 2em;
+
+                th{
+                    opacity: 0.5;
+                }
+
+                td{
+                    text-align: center;
+                    height: 2em;
+
+                    img{
+                        height: 100%;
+                    }
+                }
+            }
+        }
+
+    }
+}
