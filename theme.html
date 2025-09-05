@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Guía rápida: HTML, CSS, JavaScript y Git</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        transition: color .3s ease;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        /* FIXME: mejorar formulas */
+        --base-color: #222222;
+        --panel: oklch( from var(--base-color) calc(l * 1.2) c h );
+        --brand: oklch( from var(--base-color) calc(l * 3) calc(c * 5) h );
+        --accent: oklch( from var(--base-color) calc(l * 3) calc(c * 5) calc(h * 1) );
+
+        --txt: #e5e7eb;
+        --muted: oklch( from var(--txt) calc(l * 0.9) calc(c * 0.9) h );
+        --ring: oklch( from var(--txt) calc(l * 0.7) calc(c * 0.7) calc(c * 0.85) );
+
+        margin: 0;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu,
+          Cantarell, Noto Sans, "Helvetica Neue", Arial, "Apple Color Emoji",
+          "Segoe UI Emoji";
+        background: radial-gradient(
+            1000px 600px at 10% -10%,
+            rgba(56, 189, 248, 0.08),
+            transparent 60%
+          ),
+          radial-gradient(
+            800px 500px at 110% 10%,
+            rgba(34, 211, 238, 0.08),
+            transparent 60%
+          ),
+          var(--base-color);
+        color: var(--txt);
+        line-height: 1.6;
+      }
+
+      header {
+        height: 25vh;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 36px 20px 16px;
+
+        display: flex;
+        justify-content: space-between;
+      }
+      header h1 {
+        margin: 0 0 6px;
+        font-size: clamp(1.6rem, 2.4vw + 1rem, 2.6rem);
+        letter-spacing: -0.02em;
+      }
+      header p {
+        color: var(--muted);
+        background-color: var(--panel);
+        padding: .2rem .4rem;
+        border-radius: .45rem;
+        margin: 0;
+      }
+
+      .titulo {
+        height: 100%;
+      }
+
+      .color-picker {
+        height: auto;
+        padding: .5rem;
+        background-color: var(--panel);
+        border-radius: 10%;
+
+        display: flex;
+        gap: .5rem;
+        justify-content: center;
+        align-items: center;
+      }
+
+      label[for="base-color-input"]{
+        background-color: var(--panel);
+        pad: .7rem 1rem;
+        border-radius: .5rem;
+      }
+
+      #base-color-input{
+        width: 2rem;
+        background: none;
+        border: none;
+      }
+
+      main {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 24px 20px 48px;
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 16px;
+      }
+
+      article {
+        grid-column: span 12;
+        /* background: linear-gradient(
+          180deg,
+          rgba(17, 24, 39, 0.7),
+          var(--panel)
+        ); */
+        background-color: var(--panel);
+        border: 1px solid rgba(148, 163, 184, 0.35);
+        border-radius: 18px;
+        padding: 18px 18px 16px;
+        box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.6);
+        transition: transform 0.2s ease, box-shadow 0.2s ease,
+          border-color 0.2s ease;
+      }
+      article:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 18px 40px -20px rgba(56, 189, 248, 0.45);
+        border-color: rgba(56, 189, 248, 0.35);
+      }
+
+      @media (min-width: 760px) {
+        article {
+          grid-column: span 6;
+        }
+      }
+      @media (min-width: 1040px) {
+        article {
+          grid-column: span 3;
+        }
+      }
+
+      h2 {
+        margin: 4px 0 8px;
+        font-size: 1.25rem;
+        line-height: 1.2;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      h2 span {
+        display: inline-grid;
+        place-content: center;
+        width: 26px;
+        height: 26px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, var(--brand), var(--accent));
+        color: #0b1020;
+        font-weight: 800;
+        font-size: 0.9rem;
+        box-shadow: .12rem .12rem .4rem .1rem var(--ring);
+      }
+
+      p {
+        margin: 0 0 10px;
+      }
+      ul {
+        margin: 0;
+        padding-left: 18px;
+      }
+      li {
+        margin: 6px 0;
+      }
+
+      code {
+        background: rgba(148, 163, 184, 0.12);
+        padding: 2px 6px;
+        border-radius: 6px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", "Courier New", monospace;
+        font-size: 0.95em;
+      }
+
+      .tag {
+        display: inline-block;
+        margin-top: 6px;
+        padding: 4px 8px;
+        font-size: 0.75rem;
+        border-radius: 999px;
+        background: rgba(56, 189, 248, 0.12);
+        border: 1px solid rgba(56, 189, 248, 0.25);
+        color: #c2f0ff;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="titulo">
+        <h1>Frontend 101: HTML, CSS, JavaScript y Git</h1>
+        <p>
+          Una página mínima con <strong>header</strong> y
+          <strong>4 artículos</strong> que resumen los pilares del desarrollo
+          web moderno.
+        </p>
+      </div>
+      <aside class="color-picker">
+        <label for="base-color-input">Background:</label>
+        <input 
+          type="color" 
+          name="" 
+          id="base-color-input"
+          oninput="setColor(this)"
+        >
+      </aside>
+    </header>
+
+    <main>
+      <article>
+        <h2><span>1</span> HTML</h2>
+        <p>
+          <strong>HTML (HyperText Markup Language)</strong> define la estructura
+          y el significado del contenido en la web.
+        </p>
+        <ul>
+          <li>
+            Etiquetas comunes: <code>&lt;h1&gt;</code>, <code>&lt;p&gt;</code>,
+            <code>&lt;a&gt;</code>, <code>&lt;img&gt;</code>,
+            <code>&lt;section&gt;</code>.
+          </li>
+          <li>
+            Documento base: <code>&lt;!doctype html&gt;</code>,
+            <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>,
+            <code>&lt;body&gt;</code>.
+          </li>
+          <li>
+            Semántica para accesibilidad y SEO: usa <code>&lt;header&gt;</code>,
+            <code>&lt;main&gt;</code>, <code>&lt;article&gt;</code>,
+            <code>&lt;footer&gt;</code>.
+          </li>
+        </ul>
+        <span class="tag">estructura</span>
+      </article>
+
+      <article>
+        <h2><span>2</span> CSS</h2>
+        <p>
+          <strong>CSS (Cascading Style Sheets)</strong> controla la
+          presentación: colores, tipografías, layout y responsividad.
+        </p>
+        <ul>
+          <li>
+            Selección por etiqueta, clase o id: <code>p</code>,
+            <code>.boton</code>, <code>#header</code>.
+          </li>
+          <li>
+            Modelos de diseño: <code>flex</code>, <code>grid</code>,
+            <code>position</code>.
+          </li>
+          <li>
+            Buenas prácticas: variables, sistemas de espaciado, mobile-first y
+            componentes reutilizables.
+          </li>
+        </ul>
+        <span class="tag">estilos</span>
+      </article>
+
+      <article>
+        <h2><span>3</span> JavaScript</h2>
+        <p>
+          <strong>JavaScript</strong> agrega interactividad y lógica: escuchar
+          eventos, modificar el DOM y conectar APIs.
+        </p>
+        <ul>
+          <li>
+            DOM: <code>document.querySelector()</code>,
+            <code>addEventListener()</code>, <code>classList.toggle()</code>.
+          </li>
+          <li>
+            Módulos y fetch: <code>import/export</code>,
+            <code>fetch()</code> para consumir servicios.
+          </li>
+          <li>
+            Buenas prácticas: código modular, funciones puras y manejo de
+            errores.
+          </li>
+        </ul>
+        <span class="tag">interactividad</span>
+      </article>
+
+      <article>
+        <h2><span>4</span> Git</h2>
+        <p>
+          <strong>Git</strong> es el sistema de control de versiones más usado:
+          registra cambios y facilita la colaboración.
+        </p>
+        <ul>
+          <li>
+            Flujo básico: <code>git init</code> → <code>git add</code> →
+            <code>git commit</code> → <code>git push</code>.
+          </li>
+          <li>
+            Ramas: crea features en <code>git branch</code> y fusiona con
+            <code>git merge</code> o <code>git rebase</code>.
+          </li>
+          <li>
+            Remotos: conecta con plataformas como GitHub, GitLab o Bitbucket.
+          </li>
+        </ul>
+        <span class="tag">versionado</span>
+      </article>
+    </main>
+
+    <script>
+      function setColor(input){
+        //esta parte sera reemplazada cuando este en vigencia la funcion CSS 'contrast-color()' 
+        const lightness = getLightnessFromHex(input.value);
+        console.log(lightness);
+        
+        document.body.setAttribute('style',`
+          --base-color: ${input.value};
+          --txt: ${lightness > 60 ? 'black' : 'white'};
+          `);
+      }
+
+      function getLightnessFromHex(hex){
+        hex = hex.replace(/^#/,'');
+
+        const r = parseInt(hex.substr(0, 2), 16);
+        const g = parseInt(hex.substr(2, 2), 16);
+        const b = parseInt(hex.substr(4, 2), 16);
+
+        // Formula de "brillo percibido"
+        const brightness = ( 0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+
+        return (brightness * 100).toFixed(2);
+      }
+
+
+</script>
+  </body>
+</html>
