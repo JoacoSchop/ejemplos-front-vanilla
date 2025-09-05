@@ -18,6 +18,7 @@
         /* FIXME: mejorar formulas */
         --base-color: #222222;
         --panel: oklch( from var(--base-color) calc(l * 1.2) c h );
+        --tag: oklch( from var(--base-color) calc(l * 0.9) c h );
         --brand: oklch( from var(--base-color) calc(l * 3) calc(c * 5) h );
         --accent: oklch( from var(--base-color) calc(l * 3) calc(c * 5) calc(h * 1) );
 
@@ -76,7 +77,7 @@
         padding: .5rem;
         background-color: var(--panel);
         border: 1px solid rgba(148, 163, 184, 0.35);
-        border-radius: 10%;
+        border-radius: .75rem;
 
         display: flex;
         gap: .5rem;
@@ -185,7 +186,7 @@
         padding: 4px 8px;
         font-size: 0.75rem;
         border-radius: 999px;
-        background: rgba(56, 189, 248, 0.12);
+        background: var(--tag);
         border: 1px solid rgba(56, 189, 248, 0.25);
         color: #c2f0ff;
       }
