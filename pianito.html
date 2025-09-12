@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Piano Virtual con Sustain 🎹</title>
+    <script src="https://unpkg.com/tone@latest/build/Tone.js"></script>
+    <style>
+      body {
+        font-family: sans-serif;
+        background: #222;
+        color: #fff;
+        text-align: center;
+      }
+      h1 {
+        margin-top: 20px;
+      }
+      .controls {
+        margin: 20px;
+      }
+      .keyboard {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+        position: relative;
+        height: 200px;
+        flex-wrap: wrap;
+        width: fit-content;
+        margin: auto;
+      }
+      .white {
+        width: 60px;
+        height: 200px;
+        background: #fff;
+        border: 1px solid #ccc;
+        border-radius: 0 0 5px 5px;
+        position: relative;
+        margin: 1px;
+        /* z-index: 1; */
+        cursor: pointer;
+      }
+      .white:active {
+        background: #ddd;
+      }
+      .black {
+        width: 40px;
+        height: 120px;
+        background: #000;
+        position: absolute;
+        right: -20px;
+        z-index: 2;
+        border-radius: 0 0 3px 3px;
+        cursor: pointer;
+      }
+      .black:active {
+        background: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Piano Virtual con Sustain 🎹</h1>
+
+    <div class="controls">
+      <button id="start">Activar Audio</button>
+      <button id="pedal">Sustain OFF</button>
+    </div>
+
+    <div class="keyboard" id="keyboard"></div>
+
+    <script>
+      let sampler;
+      let pedal = false; // sustain pedal
+      const keysDown = {}; // teclas actualmente presionadas
+      const activeNotes = {}; // notas sonando
+
+      const keyboardDiv = document.getElementById("keyboard");
+      const octaves = [3, 4, 5];
+      const whiteKeys = ["C", "D", "E", "F", "G", "A", "B"];
+      const blackKeysMap = { C: "C#", D: "D#", F: "F#", G: "G#", A: "A#" };
+
+      // Construir teclado
+      octaves.forEach((oct) => {
+        whiteKeys.forEach((note) => {
+          const whiteKey = document.createElement("div");
+          whiteKey.className = "white";
+          const noteName = note + oct;
+          whiteKey.dataset.note = noteName;
+          keyboardDiv.appendChild(whiteKey);
+
+          // negra
+          if (blackKeysMap[note]) {
+            const blackKey = document.createElement("div");
+            blackKey.className = "black";
+            blackKey.dataset.note = blackKeysMap[note] + oct;
+            whiteKey.appendChild(blackKey);
+          }
+        });
+      });
+
+      // Activar audio y cargar samples
+      document.getElementById("start").addEventListener("click", async () => {
+        await Tone.start();
+
+        sampler = new Tone.Sampler({
+          urls: {
+            C3: "https://tonejs.github.io/audio/salamander/C3.mp3",
+            "D#3": "https://tonejs.github.io/audio/salamander/Ds3.mp3",
+            "F#3": "https://tonejs.github.io/audio/salamander/Fs3.mp3",
+            A3: "https://tonejs.github.io/audio/salamander/A3.mp3",
+            C4: "https://tonejs.github.io/audio/salamander/C4.mp3",
+            "D#4": "https://tonejs.github.io/audio/salamander/Ds4.mp3",
+            "F#4": "https://tonejs.github.io/audio/salamander/Fs4.mp3",
+            A4: "https://tonejs.github.io/audio/salamander/A4.mp3",
+            C5: "https://tonejs.github.io/audio/salamander/C5.mp3",
+            "D#5": "https://tonejs.github.io/audio/salamander/Ds5.mp3",
+            "F#5": "https://tonejs.github.io/audio/salamander/Fs5.mp3",
+            A5: "https://tonejs.github.io/audio/salamander/A5.mp3",
+          },
+          release: 2,
+        }).toDestination();
+
+        alert("¡Piano listo! 🎹");
+      });
+
+      // Toggle pedal
+      document.getElementById("pedal").addEventListener("click", () => {
+        pedal = !pedal;
+        document.getElementById("pedal").innerText = pedal
+          ? "Sustain ON"
+          : "Sustain OFF";
+        if (!pedal) {
+          // liberar notas que ya no están presionadas
+          Object.keys(activeNotes).forEach((note) => {
+            if (!keysDown[note]) {
+              sampler.triggerRelease(note);
+              delete activeNotes[note];
+            }
+          });
+        }
+      });
+
+      // Función tocar nota
+      function noteOn(note) {
+        if (!sampler) return;
+        sampler.triggerAttack(note);
+        activeNotes[note] = true;
+      }
+
+      // Función soltar nota
+      function noteOff(note) {
+        if (!sampler) return;
+        if (!pedal) {
+          sampler.triggerRelease(note);
+          delete activeNotes[note];
+        }
+        delete keysDown[note];
+      }
+
+      // Click en teclado
+      keyboardDiv.addEventListener("mousedown", (e) => {
+        const note = e.target.dataset.note;
+        if (note) {
+          keysDown[note] = true;
+          noteOn(note);
+        }
+      });
+
+      keyboardDiv.addEventListener("mouseup", (e) => {
+        const note = e.target.dataset.note;
+        if (note) noteOff(note);
+      });
+
+      keyboardDiv.addEventListener("mouseleave", (e) => {
+        const note = e.target.dataset.note;
+        if (note) noteOff(note);
+      });
+
+      // Teclado físico
+      const keyMap = {
+        a: "C4",
+        w: "C#4",
+        s: "D4",
+        e: "D#4",
+        d: "E4",
+        f: "F4",
+        t: "F#4",
+        g: "G4",
+        y: "G#4",
+        h: "A4",
+        u: "A#4",
+        j: "B4",
+        k: "C5",
+        o: "C#5",
+        l: "D5",
+        p: "D#5",
+        ñ: "E5",
+        ";": "F5",
+        "[": "F#5",
+        "]": "G5",
+      };
+      const pressedKeys = {};
+
+      window.addEventListener("keydown", (e) => {
+        const note = keyMap[e.key];
+        if (note && !pressedKeys[e.key]) {
+          pressedKeys[e.key] = true;
+          keysDown[note] = true;
+          noteOn(note);
+        }
+      });
+
+      window.addEventListener("keyup", (e) => {
+        const note = keyMap[e.key];
+        if (note) {
+          pressedKeys[e.key] = false;
+          noteOff(note);
+        }
+      });
+    </script>
+  </body>
+</html>
