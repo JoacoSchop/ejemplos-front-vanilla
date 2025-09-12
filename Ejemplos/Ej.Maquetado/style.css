@@ -1,0 +1,244 @@
+:root {
+  --background: #eee;
+  --primary: #34393f;
+  --secondary: #ffffff;
+  --accent: #0175fd;
+  --text-color: #eeeeee;
+  --panel: #bbbbbb77;
+
+  --extra1: #ccc;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  }
+
+aside {
+  background-color: var(--primary);
+  height: 100%;
+  width: 20vw;
+  color: var(--text-color);
+  font-weight: 800;
+  padding: .5rem;
+
+  .user-team, .user-data{
+    border-bottom: 2px solid #eee5;
+  }
+
+
+  .menu-item {
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    padding-block: 1rem;
+    margin-block: .5rem;
+    font-size: .8rem;
+    position: relative;
+
+    & i {
+      aspect-ratio: 1 / 1;
+      height: 100%;
+      font-size: 1.95rem;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    & p {
+      margin-left: .5rem;
+    }
+
+    & .dropdown-btn{
+      position: absolute;
+      right: .0rem;
+      font-size: 1rem;
+    }
+  }
+
+  .search-bar {
+    width: 100%;
+    position: relative;
+    margin-block: .25rem;
+
+    & input {
+      height: 100%;
+      width: 100%;
+      padding: .2rem;
+      background-color: var(--background);
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+
+    & .search-btn {
+      position: absolute;
+      right: .2rem;
+      top: .15rem;
+      color: var(--primary);
+      font-size: 1.5rem;
+    }
+
+    & .search-btn:hover {
+      background-color: var(--extra1);
+    }
+  }
+
+  .dashboard-dropdown-btn{
+    background-color: var(--accent);
+    padding: .2rem;
+    border-radius: .4rem;
+    font-size: .6rem;
+    margin: 0px !important;
+  }
+
+  .dashboards-dropdown{
+    padding-top: 0;
+    background-color: var(--panel);
+    border-radius: .4rem;
+
+    & .dashboard-btn{
+      padding: .2rem;
+      font-size: .6rem;
+    }
+  }
+
+  .menu-row {}
+}
+
+main {
+  background-color: var(--background);
+  height: calc(100% - .75rem);
+  width: 80vw;
+  padding: .75rem;
+
+  header {
+    background-color: var(--secondary);
+    height: 2.5rem;
+    width: 100%;
+    margin-bottom: 1rem;
+
+    display: flex;
+    align-items: center;
+
+    .menu-icon{
+      font-weight: 600;
+      font-size: 1.75rem;
+      color: var(--extra1);
+    }
+  }
+
+  .container {
+
+    h2 {
+      margin: .2rem;
+    }
+
+    nav {
+      width: 100%;
+      height: auto;
+      margin-bottom: 1rem;
+
+      display: flex;
+      gap: .5rem;
+
+      .card {
+        aspect-ratio: 3 / 2.2;
+        flex-grow: 1;
+        border-radius: .3rem;
+        position: relative;
+        padding: .5rem;
+
+        .stat {
+          font-size: 1.75rem;
+        }
+
+        .stat-description {
+          font-size: .75rem;
+        }
+
+        .stat-icon {
+          height: 50%;
+          aspect-ratio: 1 / 1;
+          position: absolute;
+          right: .5rem;
+          top: .5rem;
+          background-color: var(--panel);
+          border-radius: .5rem;
+
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          & i{
+            font-size: 3.5rem;
+          }
+        }
+
+        .info {
+          background-color: var(--panel);
+          border: none;
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          min-height: 20%;
+          padding: .2rem;
+        }
+      }
+
+      .bg-blue{
+        background-color: cornflowerblue;
+      }
+
+      .bg-green{
+        background-color: rgb(104, 230, 104);
+      }
+
+      .bg-yellow{
+        background-color: rgb(245, 245, 113);
+      }
+
+      .bg-red{
+        background-color: crimson;
+      }
+    }
+
+  }
+
+  .grid-container{
+    height: 25rem;
+
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: .75rem;
+
+    .widget{
+      background-color: var(--extra1);
+    }
+
+    .wd1{
+      grid-column: 1 / 8;
+    }
+
+    .wd2{
+      grid-column: 8 / 13;
+    }
+
+    .wd3{
+      grid-column: 1 / 7;
+    }
+
+    .wd4{
+      grid-column: 7 / 13;
+    }
+  }
+}
