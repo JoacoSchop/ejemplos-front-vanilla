@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Playground: Chart.js</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    canvas {
+      max-width: 600px;
+      margin: 20px auto;
+      display: block;
+    }
+
+    .controls {
+      margin: 20px 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .controls button {
+      margin-right: 10px;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+
+    .log {
+      margin: 20px 0;
+      padding: 10px;
+      border: 1px solid #ccc;
+      background: #f9f9f9;
+      max-height: 150px;
+      overflow-y: auto;
+      font-size: 14px;
+    }
+
+    .explanation {
+      margin: 20px 0;
+      padding: 15px;
+      border: 1px solid #ccc;
+      background: #eef9ff;
+    }
+  </style>
+</head>
+<body>
+  <h1>Playground: Chart.js</h1>
+  <p>Intercambia entre distintos tipos de gráficos para aprender cómo funciona la librería.</p>
+
+  <!-- Controles -->
+  <div class="controls">
+    <button onclick="changeChart('bar')">Gráfico de Barras</button>
+    <button onclick="changeChart('line')">Gráfico de Líneas</button>
+    <button onclick="changeChart('pie')">Gráfico de Pastel</button>
+  </div>
+
+  <!-- Contenedor del gráfico -->
+  <canvas id="myChart"></canvas>
+
+  <!-- Log -->
+  <!-- <div class="log" id="log">
+    <strong>Log de acciones:</strong><br>
+  </div> -->
+
+  <!-- Explicación -->
+  <div class="explanation">
+    <h2>Explicación teórica</h2>
+    <p>
+      <strong>Chart.js</strong> es una librería de JavaScript que permite crear gráficos de forma sencilla usando el elemento 
+      <code>&lt;canvas&gt;</code>. Para usarla, seguimos estos pasos:
+    </p>
+    <ol>
+      <li>Incluimos la librería (CDN o instalación local).</li>
+      <li>Definimos un <code>&lt;canvas&gt;</code> en el HTML.</li>
+      <li>Instanciamos un nuevo <code>Chart</code> en JS, indicando:
+        <ul>
+          <li>El tipo de gráfico (<code>bar</code>, <code>line</code>, <code>pie</code>, etc.).</li>
+          <li>Los datos (labels y datasets).</li>
+          <li>Las opciones de configuración (colores, títulos, leyendas, etc.).</li>
+        </ul>
+      </li>
+    </ol>
+    <p>
+      Métodos clave:
+    </p>
+    <ul>
+      <li><code>new Chart(ctx, config)</code>: crea un gráfico en el contexto de un <code>canvas</code>.</li>
+      <li><code>chart.update()</code>: actualiza el gráfico si cambian los datos.</li>
+      <li><code>chart.destroy()</code>: destruye el gráfico actual, útil para crear uno nuevo.</li>
+    </ul>
+  </div>
+
+  <script>
+    // Obtener el contexto del canvas
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const log = document.getElementById("log");
+
+    // Datos de ejemplo
+    const labels = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'];
+    const dataValues = [12, 19, 3, 5, 2];
+
+    // Variable para guardar el gráfico actual
+    let currentChart;
+
+    // Función para escribir en el log
+    function writeLog(message) {
+      const time = new Date().toLocaleTimeString();
+      log.innerHTML += `[${time}] ${message}<br>`;
+      log.scrollTop = log.scrollHeight; // auto-scroll al final
+    }
+
+    // Función para crear un gráfico nuevo
+    function createChart(type) {
+      return new Chart(ctx, {
+        type: type, // tipo dinámico
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Ventas',
+            data: dataValues,
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.5)',
+              'rgba(54, 162, 235, 0.5)',
+              'rgba(255, 206, 86, 0.5)',
+              'rgba(75, 192, 192, 0.5)',
+              'rgba(153, 102, 255, 0.5)'
+            ],
+            borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: true },
+            title: { display: true, text: `Ejemplo de gráfico tipo ${type}` }
+          }
+        }
+      });
+    }
+
+    // Función para cambiar de gráfico
+    function changeChart(type) {
+      if (currentChart) {
+        currentChart.destroy(); // destruye el gráfico actual
+      }
+      currentChart = createChart(type);
+      writeLog(`Se generó un gráfico de tipo: ${type}`);
+    }
+
+    // Inicializar con gráfico de barras
+    changeChart('bar');
+  </script>
+</body>
+</html>
